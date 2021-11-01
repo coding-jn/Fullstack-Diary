@@ -14,6 +14,10 @@
 </head>
 <body>
 <div class="signup-form">
+  <% if (message.length > 0) { %>
+    <div class="alert alert-danger"><%= message %></div>
+  <% } %>
+  
     <form action="/login" method="post">
 		<h2>Login</h2>
 		<p>Please fill in this form to login to an account!</p>

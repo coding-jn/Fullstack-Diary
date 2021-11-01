@@ -108,7 +108,7 @@ body {
     outline: none;
 }
 .signup-form a {
-    color: #fff;	
+    color: #179b81;	
     text-decoration: underline;
 }
 .signup-form a:hover {
@@ -346,7 +346,7 @@ body {
     color:#fff;
     padding:9px 15px;
     border-bottom:1px solid #eee;
-    background-color: #5bc0de;
+    background-color: #337ab7;
     -webkit-border-top-left-radius: 5px;
     -webkit-border-top-right-radius: 5px;
     -moz-border-radius-topleft: 5px;

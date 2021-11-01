@@ -17,7 +17,7 @@
 </head>
 <body>
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="/public">Diary</a>
+    <a class="navbar-brand" href="/public">Signed in as <%= user.local.username %></a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -29,12 +29,15 @@
             Posts
           </a>
           <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <a class="dropdown-item" href="#">Public</a>
-            <a class="dropdown-item" href="#">Private</a>
+            <a class="dropdown-item" href="/public">Public</a>
+            <a class="dropdown-item" href="/private">Private</a>
           </div>
         </li>
         <li class="nav-item">
           <a href='' class="nav-link" data-toggle="modal" data-target="#modal">Create</a>
+        </li>
+        <li class="nav-item">
+          <a href='/logout' class="nav-link">Logout</a>
         </li>
       </ul>
     </div>
@@ -51,10 +54,6 @@
         <form action='/entry' method='post'>
         <div class="modal-body">
           <form role="form" class="form-horizontal">
-              <div class="form-group">
-                <label class="col-sm-2" for="thumbnail"><span class="far fa-image"></span>Thumbnail</label>
-                <input name='thumbnail' type="file" class="form-control-file col-sm-10" id="thumbnail">
-              </div>
               <div class="form-group">
                 <label class="col-sm-2" for="inputSubject"><span class="glyphicon glyphicon-list-alt"></span>Subject</label>
                 <div class="col-sm-10"><input name='subject' type="text" class="form-control" id="inputSubject" placeholder="Subject"></div>
@@ -86,55 +85,46 @@
   <div class="row justify-content-md-center">
     <div class="col-xl-5 col-lg-6 col-md-8">
       <div class="section-title text-center title-ex1">
-        <h2>Latest News</h2>
-        <p>Inventore cillum soluta inceptos eos platea, soluta class laoreet repellendus imperdiet optio.</p>
+        <h2>Public</h2>
+        <p>All the latest public diary entries.</p>
       </div>
     </div>
   </div>
   <!-- section title ends -->
   <div class="row ">
-    <div class="col-md-6">
+    <% for(var i=0; i<entries.length; i++) {%>
+      <% console.log(entries[i].privacy) %>
+      <% if(entries[i].privacy === 'public') {%>
+      <div class="col-md-6">
 
       <div class="media blog-media">
-        <a href="blog-post-left-sidebar.html"><img class="d-flex" src="https://via.placeholder.com/350x380/6495ED/000000" alt="Generic placeholder image"></a>
+        <a href="blog-post-left-sidebar.html"><img class="d-flex" src="https://via.placeholder.com/350x380/19aa8d/000000" alt="Generic placeholder image"></a>
         <div class="circle">
-          <h5 class="day">14</h5>
-          <span class="month">sep</span>
+          <h5 class="day"><%= entries[i].date.getDay() %></h5>
+          <% const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+          "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"] %>
+          <span class="month"><%= monthNames[entries[i].date.getMonth()] %></span>
         </div>
         <div class="media-body">
-          <a href=""><h5 class="mt-0">Standard Blog Post</h5></a>
-          Sodales aliquid, in eget ac cupidatat velit autem numquam ullam ducimus occaecati placeat error.
-          <a href="blog-post-left-sidebar.html" class="post-link">Read More</a>
+          <a href=""><h5 class="mt-0"><%= entries[i].subject %></h5></a>
+          <% if(entries[i].entry.length > 70) {%>
+            <%= entries[i].entry.substr(0, 70) %>..
+          <% } else {%>
+            <%= entries[i].entry %>
+          <% } %>
+          <a href="#" class="read post-link">Read More</a>
           <ul>
-            <li>by: Admin</li>
-            <li class="text-right"><a href="blog-post-left-sidebar.html">07 comments</a></li>
+            <li>by: <span><%= entries[i].user %></span></li>
+            <% if(entries[i].user === user.local.username) {%>
+              <li class="trash text-right" id='trash'><i class="far fa-trash-alt"></i></li>
+            <% } %>
           </ul>
         </div>
       </div>
 
     </div>
-
-    <div class="col-md-6">
-
-      <div class="media blog-media">
-        <a href="blog-post-left-sidebar.html"><img class="d-flex" src="https://via.placeholder.com/350x380/FFB6C1/000000" alt="Generic placeholder image"></a>
-        <div class="circle">
-            <h5 class="day">12</h5>
-            <span class="month">sep</span>
-          </div>
-        <div class="media-body">
-          <a href=""><h5 class="mt-0">perferendis labore</h5></a>
-          Sodales aliquid, in eget ac cupidatat velit autem numquam ullam ducimus occaecati placeat error.
-          <a href="blog-post-left-sidebar.html" class="post-link">Read More</a>
-          <ul>
-            <li>by: Admin</li>
-            <li class="text-right"><a href="blog-post-left-sidebar.html">04 comments</a></li>
-          </ul>
-        </div>
-      </div>
-
-    </div>
-
+    <% } %>
+    <% } %>
   </div>
 </div>
 </section>

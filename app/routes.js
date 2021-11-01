@@ -5,7 +5,7 @@ module.exports = function(app, passport, db) {
 // normal routes ===============================================================
     // show the home page (will also have our login links)
     app.get('/', function(req, res) {
-        res.render('signup.ejs')
+        res.render('signup.ejs', { message: req.flash('signupMessage') });
     });
 
     // PROFILE SECTION =========================
@@ -29,6 +29,16 @@ module.exports = function(app, passport, db) {
         })
     });
 
+    app.get('/fullpost', isLoggedIn, function(req, res) {
+        db.collection('entries').find().toArray((err, result) => {
+          if (err) return console.log(err)
+          res.render('public.ejs', {
+            user : req.user,
+            entries: result,
+          })
+        })
+    });
+
     // LOGOUT ==============================
     app.get('/logout', function(req, res) {
         req.logout();
@@ -39,7 +49,17 @@ module.exports = function(app, passport, db) {
 
     app.post('/entry', isLoggedIn, (req, res) => {
         console.log(req.user.local)
-      db.collection('entries').insertOne({user: req.user.local.username, subject: req.body.subject, entry: req.body.entry, date: new Date(), privary: req.body.privacy}, (err, result) => {
+      db.collection('entries').insertOne({user: req.user.local.username, subject: req.body.subject, entry: req.body.entry, date: new Date(), privacy: req.body.privacy}, (err, result) => {
+        if (err) return console.log(err)
+        console.log('saved to database')
+        res.redirect('/public')
+      })
+    })
+
+    app.delete('/entry', isLoggedIn, (req, res) => {
+        console.log(req.body.user)
+        console.log(req.body.subject)
+      db.collection('entries').remove({user: req.body.user, subject: req.body.subject}, (err, result) => {
         if (err) return console.log(err)
         console.log('saved to database')
         res.redirect('/public')
