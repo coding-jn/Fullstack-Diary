@@ -56,9 +56,22 @@ module.exports = function(app, passport, db) {
       })
     })
 
+    app.put('/entry', isLoggedIn, (req, res) => {
+        db.collection('entries')
+        .findOneAndUpdate({user: req.body.user, subject: req.body.subject}, {
+          $set: {
+            privacy: 'private'
+          }
+        }, {
+          sort: {_id: -1},
+          upsert: true
+        }, (err, result) => {
+          if (err) return res.send(err)
+          res.send(result)
+        })
+      })
+
     app.delete('/entry', isLoggedIn, (req, res) => {
-        console.log(req.body.user)
-        console.log(req.body.subject)
       db.collection('entries').remove({user: req.body.user, subject: req.body.subject}, (err, result) => {
         if (err) return console.log(err)
         console.log('saved to database')
